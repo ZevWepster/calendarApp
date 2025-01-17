@@ -21,19 +21,19 @@ const CalendarApp = () => {
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
 
-  //   Event modal Event modal Event modal Event modal Event modal
+  // Event modal state variables
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [showEventPopup, setShowEventPopup] = useState(false);
   const [events, setEvents] = useState([]);
   const [eventTime, setEventTime] = useState({ hours: "00", minutes: "00" });
   const [eventText, setEventText] = useState("");
+  const [eventLocation, setEventLocation] = useState(""); // New state for location
 
   const [editingEvent, setEditingEvent] = useState(null);
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
-  //   console.log(daysInMonth, firstDayOfMonth);
   const prevMonth = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1));
     setCurrentYear((prevYear) =>
@@ -48,26 +48,14 @@ const CalendarApp = () => {
     );
   };
 
-  //   Event modal Event modal Event modal Event modal Event modal
-  const handleDayClick = (day) => {
-    const clickedDate = new Date(currentYear, currentMonth, day);
-    const today = new Date();
-
-    if (clickedDate >= today || isSameDay(clickedDate, today)) {
-      setSelectedDate(clickedDate);
-      setShowEventPopup(true);
-      setEventTime({ hours: "00", minutes: "00" });
-      setEventText("");
-      setEditingEvent;
-    }
-  };
-
-  const isSameDay = (date1, date2) => {
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    );
+  // Event modal handling
+  const handleAddEventClick = () => {
+    setShowEventPopup(true);
+    setSelectedDate(currentDate);
+    setEventTime({ hours: "00", minutes: "00" });
+    setEventText("");
+    setEventLocation(""); // Reset location
+    setEditingEvent(null);
   };
 
   const handleEventSubmit = () => {
@@ -79,6 +67,7 @@ const CalendarApp = () => {
         "0"
       )}`,
       text: eventText,
+      location: eventLocation, // Store the location
     };
 
     let updatedEvents = [...events];
@@ -96,6 +85,7 @@ const CalendarApp = () => {
     setEvents(updatedEvents);
     setEventTime({ hours: "00", minutes: "00" });
     setEventText("");
+    setEventLocation(""); // Reset location after submit
     setShowEventPopup(false);
     setEditingEvent(null);
   };
@@ -107,13 +97,13 @@ const CalendarApp = () => {
       minutes: event.time.split(":")[1].replace(" ", ""),
     });
     setEventText(event.text);
+    setEventLocation(event.location || ""); // Set location
     setEditingEvent(event);
     setShowEventPopup(true);
   };
 
   const handleDeleteEvent = (eventId) => {
-    const updatedEvents = events.filter((event) => event.id != eventId);
-
+    const updatedEvents = events.filter((event) => event.id !== eventId);
     setEvents(updatedEvents);
   };
 
@@ -130,9 +120,13 @@ const CalendarApp = () => {
     <div className="calendar-app">
       <div className="calendar">
         <h1 className="heading">Calendar</h1>
+        <button className="add-event-btn" onClick={handleAddEventClick}>
+          Add Event
+        </button>
         <div className="navigate-date">
           <h2 className="month">{monthsOfYear[currentMonth]}</h2>
           <h2 className="year">{currentYear}</h2>
+
           <div className="buttons">
             <i className="bx bx-chevron-left" onClick={prevMonth}></i>
             <i className="bx bx-chevron-right" onClick={nextMonth}></i>
@@ -157,7 +151,6 @@ const CalendarApp = () => {
                   ? "current-day"
                   : ""
               }
-              onClick={() => handleDayClick(day + 1)}
             >
               {day + 1}
             </span>
@@ -190,6 +183,28 @@ const CalendarApp = () => {
                 onChange={handleTimeChange}
               />
             </div>
+
+            {/* New Date Input */}
+            <div className="event-date-popup">
+              <div className="event-date-label">Date</div>
+              <input
+                type="date"
+                value={selectedDate.toISOString().split("T")[0]}
+                onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              />
+            </div>
+
+            {/* New Location Input */}
+            <div className="event-location-popup">
+              <div className="event-location-label">Location</div>
+              <input
+                type="text"
+                placeholder="Enter event location"
+                value={eventLocation}
+                onChange={(e) => setEventLocation(e.target.value)}
+              />
+            </div>
+
             <textarea
               placeholder="Enter Event Description (max of 60 characters)"
               value={eventText}
@@ -212,15 +227,16 @@ const CalendarApp = () => {
         )}
 
         {events.map((event, index) => (
-          // index niet handig voor veranderende data //
           <div className="event" key={index}>
             <div className="event-date-wrapper">
               <div className="event-date">{`${
                 monthsOfYear[event.date.getMonth()]
               } ${event.date.getDate()}, ${event.date.getFullYear()}`}</div>
               <div className="event-time">{event.time}</div>
+              <div className="event-location">{event.location}</div>{" "}
             </div>
             <div className="event-text">{event.text}</div>
+
             <div className="event-buttons">
               <i
                 className="bx bxs-edit-alt"

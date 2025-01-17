@@ -205,6 +205,20 @@
   cursor: pointer;
 }
 
+.add-event-btn {
+  width: clamp(15rem, 15cqi, 25rem);
+  height: 4rem;
+  background-color: #c97f1a;
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(1.5rem, 1.5cqi, 2.2rem);
+  letter-spacing: 0.1rem;
+  border: none;
+  box-shadow: 0 0 1.5rem 1rem rgba(239, 144, 17, 0.2);
+  cursor: pointer;
+  margin-left: 1.5rem;
+}
+
 .event-popup-btn:active {
   transform: translateY(0.1rem);
 }
@@ -255,6 +269,11 @@
   font-size: clamp(1.3rem, 1cqi, 1.6rem);
   line-height: 4rem;
   font-weight: bold;
+  color: #fff;
+}
+
+.event-location {
+  font-size: clamp(1rem, 1cqi, 1.2rem);
   color: #fff;
 }
 
