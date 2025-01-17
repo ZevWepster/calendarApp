@@ -7,7 +7,7 @@ Welcome to the **Calendar App** project! This is a simple calendar application b
 ### Current Features
 
 - Interactive calendar interface.
-- Add events by clicking on a specific day.
+- Add, edit, delete events
 - Events persist in memory for the current session.
 
 ### Planned Enhancements
@@ -77,10 +77,11 @@ This project is primarily for personal learning, but suggestions and improvement
 
 - [x] Basic calendar functionality.
 - [x] Add Event button for triggering `event-popup`.
+- [x] Allow changing the date of an event within the `event-popup`.
+- [ ] Add css within `event-popup` for location and date
 - [ ] Store events in a local `events.json` file.
 - [ ] Display day-specific events when clicking on a date.
 - [ ] Add the ability to repeat events (daily, weekly, monthly).
-- [ ] Allow changing the date of an event within the `event-popup`.
 - [ ] Automatically sort displayed events by time.
 
 ## Acknowledgments
