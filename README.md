@@ -76,7 +76,7 @@ This project is primarily for personal learning, but suggestions and improvement
 ## Roadmap
 
 - [x] Basic calendar functionality.
-- [ ] Add Event button for triggering `event-popup`.
+- [x] Add Event button for triggering `event-popup`.
 - [ ] Store events in a local `events.json` file.
 - [ ] Display day-specific events when clicking on a date.
 - [ ] Add the ability to repeat events (daily, weekly, monthly).
