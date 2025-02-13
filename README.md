@@ -8,14 +8,14 @@ Welcome to the **Calendar App** project! This is a simple calendar application b
 
 - Interactive calendar interface.
 - Add, edit, delete events
-- Events persist in memory for the current session. Test events are hardcoded in for testing purpose
+- Events persist in memory for the current session.
 
 ### Planned Enhancements
 
-1. **Events Storage**: Will eventually add a Database to store events
-2. **Day-Specific Event Display**: When clicking on a day, display the events for that day instead of opening the `event-popup`. (added/works)
+1. **Local Events Storage**: Load, save, and update events in a local `events.json` file to persist data across sessions.
+2. **Day-Specific Event Display**: When clicking on a day, display the events for that day instead of opening the `event-popup`.
 3. **Event Repetition**: Add the ability to repeat events daily, weekly, or monthly.
-4. **Event Date Modification**: Allow users to change the date of an event within the `event-popup`. (added/works)
+4. **Event Date Modification**: Allow users to change the date of an event within the `event-popup`.
 5. **Event Sorting**: Automatically sort displayed events by time.
 
 ## Purpose of the Project
@@ -28,7 +28,7 @@ Welcome to the **Calendar App** project! This is a simple calendar application b
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend (planned)**: Node.js for handling the local storage logic.
-- **File Storage (planned)**: A to be determined database
+- **File Storage (planned)**: JSON files for event persistence.
 
 ## Installation
 
@@ -54,17 +54,15 @@ To run the project locally, follow these steps:
 
 4. **Run the Application**:
    **Run the Application**:
-
    ```bash
    npm run dev
    ```
-
    This will start a local development server. Open your browser and navigate to `http://localhost:3000` (or the port specified in your configuration).
 
 ## Usage
 
 1. Open the calendar in your browser.
-2. Click The Add Event button to add a event.
+2. Click on a day to add an event (current functionality).
 3. Manage events through the planned enhancements (upcoming features).
 
 ## Contributing
@@ -80,11 +78,11 @@ This project is primarily for personal learning, but suggestions and improvement
 - [x] Basic calendar functionality.
 - [x] Add Event button for triggering `event-popup`.
 - [x] Allow changing the date of an event within the `event-popup`.
+- [x] Display day-specific events when clicking on a date.
 - [ ] Add css within `event-popup` for location and date
-- [ ] Store events in a local `events.json` file.
-- [ ] Display day-specific events when clicking on a date.
 - [ ] Add the ability to repeat events (daily, weekly, monthly).
 - [ ] Automatically sort displayed events by time.
+- [ ] Add database to store events
 
 ## Acknowledgments
 
