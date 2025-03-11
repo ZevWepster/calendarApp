@@ -179,18 +179,19 @@
 
 .event-popup {
   position: absolute;
-  top: 38%;
+  top: 15%;
   left: 3rem;
-  background-color: #161b22;
+  background-color: #3b2605;
   width: clamp(25rem, 21cqi, 40rem);
-  aspect-ratio: 10 / 9;
+  aspect-ratio: 10 / 6;
   border-radius: 1rem;
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1rem 3rem rgba(53, 33, 11, 0.3);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   row-gap: 2rem;
+  z-index: 1000;
   /* display: none; */
 }
 
@@ -314,6 +315,12 @@
   color: #fff;
 }
 
+.event-date-label {
+  font-size: clamp(1rem, 1cqi, 1.2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
 .event-time {
   font-size: clamp(1.3rem, 1cqi, 1.6rem);
   line-height: 4rem;
@@ -326,6 +333,23 @@
   color: #fff;
 }
 
+.event-location-label {
+  font-size: clamp(1rem, 1cqi, 1.2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.repeat-option-label {
+  font-size: clamp(1rem, 1cqi, 1.2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.repeat-until-label {
+  font-size: clamp(1rem, 1cqi, 1.2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
 .event-text {
   font-size: clamp(1.2rem, 1cqi, 1.4rem);
   line-height: 2rem;
@@ -457,6 +481,7 @@ input:checked + .slider:before {
     width: 60%;
     aspect-ratio: 4 / 3;
     row-gap: 1rem;
+    z-index: 1000;
   }
 
   .event-time-popup {
