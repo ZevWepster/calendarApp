@@ -3,8 +3,18 @@
 ## [Unreleased]
 
 - Add functionality to store events in a database.
-- Add the ability to repeat events (daily, weekly, monthly).
-- Automatically sort displayed events by time.
+- Automatically sort (added) displayed events by time.
+
+## [1.3.0] - 2025-03-11
+
+### Added
+
+- Add the ability to repeat events (daily, weekly, monthly) and a repeat until function.
+
+### Fixed
+
+- Add event popup Display and css
+- Better looking scrollbar
 
 ## [1.2.0] - 2025-02-13
 
