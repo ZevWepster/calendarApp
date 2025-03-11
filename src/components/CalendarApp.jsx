@@ -24,6 +24,8 @@ const CalendarApp = () => {
   // Event modal state variables
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [showEventPopup, setShowEventPopup] = useState(false);
+  const [repeatOption, setRepeatOption] = useState("none");
+  const [repeatUntil, setRepeatUntil] = useState(null);
   const [events, setEvents] = useState([
     // HARD CODED TEST EVENTS
     {
@@ -109,7 +111,7 @@ const CalendarApp = () => {
   // Event modal handling
   const handleAddEventClick = () => {
     setShowEventPopup(true);
-    setSelectedDate(currentDate);
+    setSelectedDate(selectedDate || currentDate);
     const now = new Date();
     setEventTime({
       hours: now.getHours().toString().padStart(2, "0"),
@@ -117,6 +119,8 @@ const CalendarApp = () => {
     });
     setEventText("");
     setEventLocation(""); // Reset location
+    setRepeatOption("none"); // Reset repeat option
+    setRepeatUntil(null); // Reset repeat until
     setEditingEvent(null);
   };
 
@@ -130,6 +134,7 @@ const CalendarApp = () => {
       )}`,
       text: eventText,
       location: eventLocation, // Store the location
+      repeat: repeatOption, // Store the repeat option
     };
 
     let updatedEvents = [...events];
@@ -140,6 +145,27 @@ const CalendarApp = () => {
       );
     } else {
       updatedEvents.push(newEvent);
+
+      // Handle repeat logic
+      if (repeatOption !== "none") {
+        let repeatDate = new Date(selectedDate);
+        while (repeatDate <= repeatUntil) {
+          if (repeatOption === "daily") {
+            repeatDate.setDate(repeatDate.getDate() + 1);
+          } else if (repeatOption === "weekly") {
+            repeatDate.setDate(repeatDate.getDate() + 7);
+          } else if (repeatOption === "monthly") {
+            repeatDate.setMonth(repeatDate.getMonth() + 1);
+          }
+          if (repeatDate <= repeatUntil) {
+            updatedEvents.push({
+              ...newEvent,
+              id: Date.now() + repeatDate.getTime(),
+              date: new Date(repeatDate),
+            });
+          }
+        }
+      }
     }
 
     updatedEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -148,6 +174,8 @@ const CalendarApp = () => {
     setEventTime({ hours: "00", minutes: "00" });
     setEventText("");
     setEventLocation(""); // Reset location after submit
+    setRepeatOption("none"); // Reset repeat option after submit
+    setRepeatUntil(null); // Reset repeat until after submit
     setShowEventPopup(false);
     setEditingEvent(null);
   };
@@ -160,6 +188,8 @@ const CalendarApp = () => {
     });
     setEventText(event.text);
     setEventLocation(event.location || ""); // Set location
+    setRepeatOption(event.repeat || "none"); // Set repeat option
+    setRepeatUntil(null); // Reset repeat until
     setEditingEvent(event);
     setShowEventPopup(true);
   };
@@ -261,6 +291,23 @@ const CalendarApp = () => {
         </div>
         {showEventPopup && (
           <div className="event-popup">
+            {/* added timezoneOffset because it was showing the day before.  */}
+            <div className="event-date-popup">
+              <div className="event-date-label">Date</div>
+              <input
+                type="date"
+                value={
+                  new Date(
+                    selectedDate.getTime() -
+                      selectedDate.getTimezoneOffset() * 60000
+                  )
+                    .toISOString()
+                    .split("T")[0]
+                }
+                onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              />
+            </div>
+
             <div className="time-input">
               <div className="event-time-popup">Time</div>
               <input
@@ -285,26 +332,48 @@ const CalendarApp = () => {
               />
             </div>
 
-            {/* New Date Input */}
-            <div className="event-date-popup">
-              <div className="event-date-label">Date</div>
-              <input
-                type="date"
-                value={selectedDate.toISOString().split("T")[0]}
-                onChange={(e) => setSelectedDate(new Date(e.target.value))}
-              />
-            </div>
-
-            {/* New Location Input */}
             <div className="event-location-popup">
               <div className="event-location-label">Location</div>
               <input
                 type="text"
-                placeholder="Enter event location"
+                placeholder="Enter a location"
                 value={eventLocation}
                 onChange={(e) => setEventLocation(e.target.value)}
               />
             </div>
+
+            <div className="repeat-options">
+              <div className="repeat-option-label">Repeat Event</div>
+              <select
+                value={repeatOption}
+                onChange={(e) => setRepeatOption(e.target.value)}
+              >
+                <option value="none">None</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+
+            {repeatOption !== "none" && (
+              <div className="repeat-until-popup">
+                <div className="repeat-until-label">Repeat Until</div>
+                <input
+                  type="date"
+                  value={
+                    repeatUntil
+                      ? new Date(
+                          repeatUntil.getTime() -
+                            repeatUntil.getTimezoneOffset() * 60000
+                        )
+                          .toISOString()
+                          .split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) => setRepeatUntil(new Date(e.target.value))}
+                />
+              </div>
+            )}
 
             <textarea
               placeholder="Enter Event Description (max of 60 characters)"
