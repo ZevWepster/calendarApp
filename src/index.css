@@ -22,6 +22,26 @@ html {
   perspective: 100rem;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #241b1b;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #9e6c01;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 @media (max-width: 500px) {
   html {
     font-size: 55%;

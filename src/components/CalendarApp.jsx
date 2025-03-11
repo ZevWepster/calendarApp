@@ -24,10 +24,68 @@ const CalendarApp = () => {
   // Event modal state variables
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [showEventPopup, setShowEventPopup] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([
+    // HARD CODED TEST EVENTS
+    {
+      id: 1,
+      date: new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      ),
+      time: "10:00",
+      text: "Event for today",
+      location: "Location 1",
+    },
+    {
+      id: 2,
+      date: new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + 1
+      ),
+      time: "11:00",
+      text: "Event for tomorrow",
+      location: "Location 2",
+    },
+    {
+      id: 3,
+      date: new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + 2
+      ),
+      time: "12:00",
+      text: "Event in two days",
+      location: "Location 3",
+    },
+    {
+      id: 4,
+      date: new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + 3
+      ),
+      time: "13:00",
+      text: "Event in three days",
+      location: "Location 4",
+    },
+    {
+      id: 5,
+      date: new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() + 4
+      ),
+      time: "14:00",
+      text: "Event in four days",
+      location: "Location 5",
+    },
+  ]);
   const [eventTime, setEventTime] = useState({ hours: "00", minutes: "00" });
   const [eventText, setEventText] = useState("");
   const [eventLocation, setEventLocation] = useState(""); // New state for location
+  const [showAllEvents, setShowAllEvents] = useState(true); // New state for showing all events or selected day events
 
   const [editingEvent, setEditingEvent] = useState(null);
 
@@ -52,7 +110,11 @@ const CalendarApp = () => {
   const handleAddEventClick = () => {
     setShowEventPopup(true);
     setSelectedDate(currentDate);
-    setEventTime({ hours: "00", minutes: "00" });
+    const now = new Date();
+    setEventTime({
+      hours: now.getHours().toString().padStart(2, "0"),
+      minutes: now.getMinutes().toString().padStart(2, "0"),
+    });
     setEventText("");
     setEventLocation(""); // Reset location
     setEditingEvent(null);
@@ -123,6 +185,7 @@ const CalendarApp = () => {
         <button className="add-event-btn" onClick={handleAddEventClick}>
           Add Event
         </button>
+
         <div className="navigate-date">
           <h2 className="month">{monthsOfYear[currentMonth]}</h2>
           <h2 className="year">{currentYear}</h2>
@@ -141,23 +204,61 @@ const CalendarApp = () => {
           {[...Array(firstDayOfMonth).keys()].map((_, index) => (
             <span key={`empty-${index}`} />
           ))}
-          {[...Array(daysInMonth).keys()].map((day) => (
-            <span
-              key={day + 1}
-              className={
-                day + 1 === currentDate.getDate() &&
-                currentMonth === currentDate.getMonth() &&
-                currentYear === currentDate.getFullYear()
-                  ? "current-day"
-                  : ""
-              }
-            >
-              {day + 1}
-            </span>
-          ))}
+          {[...Array(daysInMonth).keys()].map((day) => {
+            const dayDate = new Date(currentYear, currentMonth, day + 1);
+            const isSelectedDay =
+              selectedDate.getDate() === day + 1 &&
+              selectedDate.getMonth() === currentMonth &&
+              selectedDate.getFullYear() === currentYear;
+            const isToday =
+              day + 1 === currentDate.getDate() &&
+              currentMonth === currentDate.getMonth() &&
+              currentYear === currentDate.getFullYear();
+            const hasEvent = events.some(
+              (event) =>
+                new Date(event.date).toDateString() === dayDate.toDateString()
+            );
+
+            let dayClass = "";
+            if (isToday && isSelectedDay) {
+              dayClass = "selected-today";
+            } else if (isToday) {
+              dayClass = "current-day";
+            } else if (isSelectedDay) {
+              dayClass = "selected-day";
+            } else if (hasEvent) {
+              dayClass = "event-day";
+            }
+
+            return (
+              <span
+                key={day + 1}
+                className={dayClass}
+                onClick={() => setSelectedDate(dayDate)}
+              >
+                {day + 1}
+              </span>
+            );
+          })}
         </div>
       </div>
+
       <div className="events">
+        <div className="toggle-container">
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={!showAllEvents}
+              onChange={() => setShowAllEvents(!showAllEvents)}
+            />
+            <span className="slider round"></span>
+          </label>
+          <span>
+            {showAllEvents
+              ? "Toggle to show selected day"
+              : "Toggle to show all events"}
+          </span>
+        </div>
         {showEventPopup && (
           <div className="event-popup">
             <div className="time-input">
@@ -226,29 +327,36 @@ const CalendarApp = () => {
           </div>
         )}
 
-        {events.map((event, index) => (
-          <div className="event" key={index}>
-            <div className="event-date-wrapper">
-              <div className="event-date">{`${
-                monthsOfYear[event.date.getMonth()]
-              } ${event.date.getDate()}, ${event.date.getFullYear()}`}</div>
-              <div className="event-time">{event.time}</div>
-              <div className="event-location">{event.location}</div>{" "}
-            </div>
-            <div className="event-text">{event.text}</div>
+        {events
+          .filter((event) =>
+            showAllEvents
+              ? true
+              : new Date(event.date).toDateString() ===
+                selectedDate.toDateString()
+          )
+          .map((event, index) => (
+            <div className="event" key={index}>
+              <div className="event-date-wrapper">
+                <div className="event-date">{`${
+                  monthsOfYear[event.date.getMonth()]
+                } ${event.date.getDate()}, ${event.date.getFullYear()}`}</div>
+                <div className="event-time">{event.time}</div>
+                <div className="event-location">{event.location}</div>{" "}
+              </div>
+              <div className="event-text">{event.text}</div>
 
-            <div className="event-buttons">
-              <i
-                className="bx bxs-edit-alt"
-                onClick={() => handleEditEvent(event)}
-              ></i>
-              <i
-                className="bx bxs-message-alt-x"
-                onClick={() => handleDeleteEvent(event.id)}
-              ></i>
+              <div className="event-buttons">
+                <i
+                  className="bx bxs-edit-alt"
+                  onClick={() => handleEditEvent(event)}
+                ></i>
+                <i
+                  className="bx bxs-message-alt-x"
+                  onClick={() => handleDeleteEvent(event.id)}
+                ></i>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
