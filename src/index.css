@@ -18,7 +18,7 @@ html {
   background-color: #597091;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow: scroll;
   perspective: 100rem;
 }
 
